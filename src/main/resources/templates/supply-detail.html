@@ -1,0 +1,211 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title th:text="供应商-+${supply.name}">添加供应商</title>
+    <meta name="description" content="这是一个 index 页面"/>
+    <meta name="keywords" content="index"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" th:href="@{/i/favicon.png}"/>
+    <link rel="apple-touch-icon-precomposed" th:href="@{/i/app-icon72x722x.png}"/>
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body data-type="index">
+<div th:replace="header :: header"></div>
+<div class="tpl-page-container tpl-page-header-fixed">
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="tpl-content-wrapper">
+        <div class="tpl-content-page-title">
+            零部件销售管理
+        </div>
+        <ol class="am-breadcrumb">
+            <li><a href="/index/" class="am-icon-home">首页</a></li>
+            <li><a href="/supply/">供应商管理</a></li>
+            <li class="am-active" th:text="${supply.name}">新增</li>
+        </ol>
+        <!--是否更新，亦或新增-->
+        <span class="am-hide" th:data="${isUpdate}" id="isUpdate"></span>
+        <span class="am-hide" th:data="${supply.id}" id="id"></span>
+        <div class="tpl-portlet-components" style="padding-bottom:60px;">
+            <div class="portlet-title">
+                <div class="caption font-blue bold">
+                    <span class="am-icon-code"></span> 表单
+                </div>
+            </div>
+            <div class="tpl-block ">
+                <div class="am-g tpl-amazeui-form">
+                    <div class="am-u-sm-12 am-u-md-9">
+                        <form class="am-form am-form-horizontal">
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">供应商名 / Name</label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="user-name" placeholder="输入供应商名 / Name" th:value="${supply.name}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="user-email" class="am-u-sm-3 am-form-label">电子邮箱 / Email</label>
+                                <div class="am-u-sm-9">
+                                    <input type="email" id="user-email" placeholder="输入电子邮箱 / Email" th:value="${supply.email}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="user-tel" class="am-u-sm-3 am-form-label">电话 / Telephone</label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="user-tel" placeholder="输入电话号码 / Telephone" th:value="${supply.tel}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="user-address" class="am-u-sm-3 am-form-label">地址 / Address</label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="user-address" placeholder="输入供应商地址 / Address" th:value="${supply.address}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="user-status" class="am-u-sm-3 am-form-label">状态 / Status</label>
+                                <div class="am-u-sm-9">
+                                    <select id="user-status" data-am-selected="{btnWidth: '50%'}">
+                                        <option value="已取关" th:selected="'已取关'==${supply.status}">已取关</option>
+                                        <option value="活动中" th:selected="'活动中'==${supply.status}">活动中</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <button type="button" class="am-btn am-btn-primary" id="update">保存修改</button>
+                                    <button type="button" class="am-btn am-btn-warning" id="back">返回上页</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd">系统提示</div>
+                    <div class="am-modal-bd">
+                        <p>对不起，操作失败！</p><span class="am-icon-btn am-warning am-icon-warning"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="am-modal am-modal-alert" tabindex="-1" id="my-warning">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd">系统提示</div>
+                    <div class="am-modal-bd">
+                        <p>对不起，您填写的信息不完整！</p><span class="am-icon-btn am-warning am-icon-warning"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd">操作成功</div>
+                    <div class="am-modal-bd">
+                        <span class="am-icon-spinner am-icon-spin"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/amazeui.min.js}"></script>
+<script th:src="@{/js/iscroll.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        var $isUpdate = $("#isUpdate").attr('data');
+        var $id = $("#id").attr('data');
+        var $info = $("#info");
+        var $supplyInfo = $("#info-supply");
+
+        var $modalWarning = $('#my-warning');
+        var $modalError = $('#my-alert');
+        var $modalSuccess = $('#my-modal-loading');
+
+        $info.click();
+        $info.addClass("active");
+        $supplyInfo.addClass("active");
+        //返回上一页
+        $("#back").on('click',function () {
+            window.history.back();
+        })
+
+        function errorReload() {
+            $modalWarning.modal();
+            setTimeout(function () {
+                $modalWarning.modal('close');
+                window.location.href="/supply/"+$id;
+            },500);
+        }
+        //更新or添加供应商
+        $("#update").on('click',function () {
+            var url,method;
+            //isUpdate为0，为添加供应商
+            if($isUpdate==0){
+                url = '/supply/';
+                method = 'POST';
+            }else{
+                url = '/supply/'+$id;
+                method = 'PUT';
+            }
+            var $name = $("#user-name").val();
+            var $email = $("#user-email").val();
+            var $address = $("#user-address").val();
+            var $status = $("#user-status").val();
+            var $tel = $("#user-tel").val();
+            if($name==''||$name==null){
+                errorReload();
+                return
+            }if($email==''||$email==null){
+                errorReload();
+                return
+            }if($address==''||$address==null){
+                errorReload();
+                return
+            }if($status==''||$status==null){
+                errorReload();
+                return
+            }if($tel==''||$tel==null){
+                errorReload();
+                return
+            }
+            $.ajax({
+                url: url,
+                type: method,
+                data: {
+                    name: $name,
+                    address: $address,
+                    email: $email,
+                    status: $status,
+                    tel: $tel
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    if(data.result=="success"){
+                        $modalSuccess.modal();
+                        setTimeout(function () {
+                            $modalSuccess.modal('close');
+                            window.location.href="/supply/"
+                        },1000);
+                    }else if(data.result=="error" || data.result=="exception"){
+                        $modalError.modal();
+                        setTimeout(function () {
+                            $modalError.modal('close');
+                            window.history.back();
+                        },1000);
+                    }
+                }
+            })
+
+        })
+    })
+</script>
+</body>
+
+</html>

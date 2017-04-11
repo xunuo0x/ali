@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="tpl-left-nav tpl-left-nav-hover" th:fragment="sidebar">
+    <div class="tpl-left-nav-title">
+        零部件管理
+    </div>
+    <div class="tpl-left-nav-list">
+        <ul class="tpl-left-nav-menu">
+            <li class="tpl-left-nav-item">
+                <a href="/index/" class="nav-link" id="index">
+                    <i class="am-icon-home"></i>
+                    <span>首页</span>
+                </a>
+            </li>
+            <li class="tpl-left-nav-item">
+                <a href="#" class="nav-link tpl-left-nav-link-list" id="info">
+                    <i class="am-icon-info-circle"></i>
+                    <span>基础管理</span>
+                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                </a>
+                <ul class="tpl-left-nav-sub-menu">
+                    <li>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>用户信息</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>零配件信息</span>
+                        </a>
+                        <a href="/supply/" id="info-supply">
+                            <i class="am-icon-angle-right"></i>
+                            <span>供应商信息</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tpl-left-nav-item">
+                <a href="#" class="nav-link tpl-left-nav-link-list" id="storage">
+                    <i class="am-icon-wpforms"></i>
+                    <span>库存管理</span>
+                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                </a>
+                <ul class="tpl-left-nav-sub-menu">
+                    <li>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>库存详情</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>库存流水</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tpl-left-nav-item">
+                <a href="#" class="nav-link tpl-left-nav-link-list" id="inout">
+                    <i class="am-icon-table"></i>
+                    <span>购销管理</span>
+                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                </a>
+                <ul class="tpl-left-nav-sub-menu">
+                    <li>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>采购清单</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>采购审核</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>销售清单</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>销售审核</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tpl-left-nav-item">
+                <a href="#" class="nav-link tpl-left-nav-link-list" id="personal">
+                    <i class="am-icon-user"></i>
+                    <span>个人中心</span>
+                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                </a>
+                <ul class="tpl-left-nav-sub-menu">
+                    <li>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>资料</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>设置</span>
+                        </a>
+                        <a href="#">
+                            <i class="am-icon-angle-right"></i>
+                            <span>退出</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

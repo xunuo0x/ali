@@ -1,0 +1,75 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>供应商信息</title>
+    <meta name="description" content="这是一个 index 页面"/>
+    <meta name="keywords" content="index"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" th:href="@{/i/favicon.png}"/>
+    <link rel="apple-touch-icon-precomposed" th:href="@{/i/app-icon72x722x.png}"/>
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body data-type="index">
+<div th:replace="header :: header"></div>
+<div class="tpl-page-container tpl-page-header-fixed">
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="tpl-content-wrapper">
+        <div class="tpl-content-page-title">
+            零部件销售管理
+        </div>
+        <ol class="am-breadcrumb">
+            <li><a href="/index/" class="am-icon-home">首页</a></li>
+            <li class="am-active">供应商管理</li>
+        </ol>
+        <div class="tpl-content-scope">
+            <div class="note note-info">
+                <h3>供销存管理系统V1.0  <small>供应商管理</small></h3>
+                <button type="button" class="am-btn am-radius my-main-btn" th:data="${suppliesCount}" onclick="supplyDetail(this)"><i class="am-icon-plus"></i> 新增供应商</button>
+            </div>
+        </div>
+        <div class="am-g">
+            <div th:each="supply,iterStat : ${supplies}" style="cursor: pointer" onclick="supplyDetail(this)" th:data="${supply.id}"
+                 th:class="${iterStat.last}? 'am-u-end am-u-lg-3 am-u-md-6 am-u-sm-12 supply' : 'am-u-lg-3 am-u-md-6 am-u-sm-12 supply'">
+                <div th:class="${supply.status}=='活动中'? 'dashboard-stat blue': 'dashboard-stat gray'">
+                    <div class="visual">
+                        <i class="am-icon-truck"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number" th:text="${supply.id}"></div>
+                        <div class="desc" th:text="${supply.name}"></div>
+                    </div>
+                    <a class="more" href="#"> 查看详情
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/amazeui.min.js}"></script>
+<script th:src="@{/js/iscroll.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script type="text/javascript">
+    supplyDetail = function (me) {
+        var id = $(me).attr("data");
+        window.location.href="/supply/"+id;
+    }
+    $(function () {
+        var $info = $("#info");
+        var $supplyInfo = $("#info-supply");
+        $info.click();
+        $info.addClass("active");
+        $supplyInfo.addClass("active");
+    })
+</script>
+</body>
+
+</html>
