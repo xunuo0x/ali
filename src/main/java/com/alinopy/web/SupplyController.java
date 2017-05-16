@@ -3,6 +3,7 @@ package com.alinopy.web;
 import com.alinopy.domain.Supply;
 import com.alinopy.domain.SupplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class SupplyController {
     @RequestMapping(value="/", method=RequestMethod.POST)
     @ResponseBody
     public ModelMap addSupply(@ModelAttribute Supply supply){
-        ModelMap modelMap = tryFunc(supply);
+        ModelMap modelMap = tryFunc(supply,supplyRepository);
         return modelMap;
     }
 
@@ -53,15 +54,15 @@ public class SupplyController {
     @ResponseBody
     public ModelMap updateSupply(@PathVariable Long id,@ModelAttribute Supply supply){
         supply.setId(id);
-        ModelMap modelMap = tryFunc(supply);
+        ModelMap modelMap = tryFunc(supply,supplyRepository);
         return modelMap;
     }
 
     //添加、更新供应商的时候；返回相应操作的结果
-    private ModelMap tryFunc(Supply supply){
+    public static ModelMap tryFunc(Object object, JpaRepository repository){
         ModelMap modelMap = new ModelMap();
         try {
-            if(supplyRepository.save(supply)!=null){
+            if(repository.save(object)!=null){
                 modelMap.addAttribute("result","success");
             }else {
                 modelMap.addAttribute("result", "error");

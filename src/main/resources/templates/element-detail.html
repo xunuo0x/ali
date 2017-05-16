@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title th:text="供应商-+${supply.name}">添加供应商</title>
+    <title th:text="零部件-+${element.id}">添加零部件</title>
     <meta name="description" content="这是一个 index 页面"/>
     <meta name="keywords" content="index"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -26,12 +26,12 @@
         </div>
         <ol class="am-breadcrumb">
             <li><a href="/index/" class="am-icon-home">首页</a></li>
-            <li><a href="/supply/">供应商管理</a></li>
-            <li class="am-active" th:text="${supply.name}">新增</li>
+            <li><a href="/element/">零配件管理</a></li>
+            <li class="am-active" th:text="${element.name}">新增</li>
         </ol>
         <!--是否更新，亦或新增-->
         <span class="am-hide" th:data="${isUpdate}" id="isUpdate"></span>
-        <span class="am-hide" th:data="${supply.id}" id="id"></span>
+        <span class="am-hide" th:data="${element.id}" id="id"></span>
         <div class="tpl-portlet-components" style="padding-bottom:60px;">
             <div class="portlet-title">
                 <div class="caption font-blue bold">
@@ -43,36 +43,45 @@
                     <div class="am-u-sm-12 am-u-md-9">
                         <form class="am-form am-form-horizontal">
                             <div class="am-form-group">
-                                <label for="user-name" class="am-u-sm-3 am-form-label">供应商名 / Name</label>
+                                <label for="element-name" class="am-u-sm-3 am-form-label">零配件名称 / Name</label>
                                 <div class="am-u-sm-9">
-                                    <input type="text" id="user-name" placeholder="输入供应商名 / Name" th:value="${supply.name}"/>
+                                    <input type="text" id="element-name" placeholder="输入零配件名称 / Name" th:value="${element.name}"/>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label for="user-email" class="am-u-sm-3 am-form-label">电子邮箱 / Email</label>
+                                <label for="element-inPrice" class="am-u-sm-3 am-form-label">零配件进价 / InPrice</label>
                                 <div class="am-u-sm-9">
-                                    <input type="email" id="user-email" placeholder="输入电子邮箱 / Email" th:value="${supply.email}"/>
+                                    <input type="number" id="element-inPrice" placeholder="输入零配件进价 / InPrice" th:value="${element.inPrice}"/>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label for="user-tel" class="am-u-sm-3 am-form-label">电话 / Telephone</label>
+                                <label for="element-outPrice" class="am-u-sm-3 am-form-label">零配件售价 / OutPrice</label>
                                 <div class="am-u-sm-9">
-                                    <input type="text" id="user-tel" placeholder="输入电话号码 / Telephone" th:value="${supply.tel}"/>
+                                    <input type="text" id="element-outPrice" placeholder="零配件售价 / OutPrice" th:value="${element.outPrice}"/>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label for="user-address" class="am-u-sm-3 am-form-label">地址 / Address</label>
+                                <label for="element-category" class="am-u-sm-3 am-form-label">零配件类别 / Category</label>
                                 <div class="am-u-sm-9">
-                                    <input type="text" id="user-address" placeholder="输入供应商地址 / Address" th:value="${supply.address}"/>
+                                    <input type="text" id="element-category" placeholder="零配件类别 / Category" th:value="${element.category}"/>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label for="user-status" class="am-u-sm-3 am-form-label">状态 / Status</label>
+                                <label for="element-brand" class="am-u-sm-3 am-form-label">零配件品牌 / Brand</label>
                                 <div class="am-u-sm-9">
-                                    <select id="user-status" data-am-selected="{btnWidth: '50%'}">
-                                        <option value="已取关" th:selected="'已取关'==${supply.status}">已取关</option>
-                                        <option value="活动中" th:selected="'活动中'==${supply.status}">活动中</option>
-                                    </select>
+                                    <input type="text" id="element-brand" placeholder="零配件品牌 / Brand" th:value="${element.brand}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="element-createTime" class="am-u-sm-3 am-form-label">创建时间 / CreateTime</label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="element-createTime" readonly="readonly" placeholder="创建时间 / CreateTime"  th:value="${#dates.format(element.createTime,'yyyy-MM-dd HH:mm:ss')}"/>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="element-description" class="am-u-sm-3 am-form-label">零配件描述 / Description</label>
+                                <div class="am-u-sm-9">
+                                    <textarea name="" id="element-description" placeholder="零配件描述 / Description" th:text="${element.description}" rows="4"></textarea>
                                 </div>
                             </div>
                             <div class="am-form-group">
@@ -121,7 +130,7 @@
         var $isUpdate = $("#isUpdate").attr('data');
         var $id = $("#id").attr('data');
         var $info = $("#info");
-        var $supplyInfo = $("#info-supply");
+        var $elementInfo = $("#info-element");
 
         var $modalWarning = $('#my-warning');
         var $modalError = $('#my-alert');
@@ -129,7 +138,7 @@
 
         $info.click();
         $info.addClass("active");
-        $supplyInfo.addClass("active");
+        $elementInfo.addClass("active");
         //返回上一页
         $("#back").on('click',function () {
             window.history.back();
@@ -139,7 +148,7 @@
             $modalWarning.modal();
             setTimeout(function () {
                 $modalWarning.modal('close');
-                window.location.href="/supply/"+$id;
+                window.location.href="/element/"+$id;
             },500);
         }
         //更新or添加供应商
@@ -147,42 +156,36 @@
             var url,method;
             //isUpdate为0，为添加供应商
             if($isUpdate==0){
-                url = '/supply/';
+                url = '/element/';
                 method = 'POST';
             }else{
-                url = '/supply/'+$id;
+                url = '/element/'+$id;
                 method = 'PUT';
             }
-            var $name = $("#user-name").val();
-            var $email = $("#user-email").val();
-            var $address = $("#user-address").val();
-            var $status = $("#user-status").val();
-            var $tel = $("#user-tel").val();
-            if($name==''||$name==null){
-                errorReload();
-                return
-            }if($email==''||$email==null){
-                errorReload();
-                return
-            }if($address==''||$address==null){
-                errorReload();
-                return
-            }if($status==''||$status==null){
-                errorReload();
-                return
-            }if($tel==''||$tel==null){
+            console.log(url+'---'+method);
+            var $name = $("#element-name").val();
+            var $inPrice = $("#element-inPrice").val();
+            var $outPrice = $("#element-outPrice").val();
+            var $category = $("#element-category").val();
+            var $brand = $("#element-brand").val();
+            var $createTime = $("#element-createTime").val();
+            var $description = $("#element-description").val();
+            if($name==''||$name==null||$inPrice==''||$inPrice==null||$outPrice==''||$outPrice==null||$category==''||$category==null||$brand==''||$brand==null||$createTime==''||$createTime==null||$description==''||$description==null){
                 errorReload();
                 return
             }
+            console.log($description);
             $.ajax({
                 url: url,
                 type: method,
                 data: {
                     name: $name,
-                    address: $address,
-                    email: $email,
-                    status: $status,
-                    tel: $tel
+                    inPrice: $inPrice,
+                    outPrice: $outPrice,
+                    category: $category,
+                    brand: $brand,
+                    createTime: new Date($createTime),
+                    description: $description
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -191,7 +194,7 @@
                         $modalSuccess.modal();
                         setTimeout(function () {
                             $modalSuccess.modal('close');
-                            window.location.href="/supply/"
+                            window.location.href="/element/"
                         },1000);
                     }else if(data.result=="error" || data.result=="exception"){
                         $modalError.modal();
