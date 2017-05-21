@@ -1,9 +1,6 @@
 package com.alinopy.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Snow on 2017/4/6.
@@ -14,11 +11,17 @@ public class InOrderDetail {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private Long orderId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "element_id")
+    private Element element;
 
-    @Column(nullable = false)
-    private Long elementId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "inorder_id")
+    private InOrder inOrder;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "supply_id")
+    private Supply supply;
 
     @Column(nullable = false)
     private Integer amount;
@@ -29,9 +32,10 @@ public class InOrderDetail {
     public InOrderDetail() {
     }
 
-    public InOrderDetail(Long orderId, Long elementId, Integer amount, Double discount) {
-        this.orderId = orderId;
-        this.elementId = elementId;
+    public InOrderDetail(InOrder inOrder, Element element, Supply supply, Integer amount, Double discount) {
+        this.inOrder = inOrder;
+        this.element = element;
+        this.supply = supply;
         this.amount = amount;
         this.discount = discount;
     }
@@ -44,20 +48,28 @@ public class InOrderDetail {
         this.id = id;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public InOrder getInOrder() {
+        return inOrder;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setInOrder(InOrder inOrder) {
+        this.inOrder = inOrder;
     }
 
-    public Long getElementId() {
-        return elementId;
+    public Element getElement() {
+        return element;
     }
 
-    public void setElementId(Long elementId) {
-        this.elementId = elementId;
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
+    public Supply getSupply() {
+        return supply;
+    }
+
+    public void setSupply(Supply supply) {
+        this.supply = supply;
     }
 
     public Integer getAmount() {

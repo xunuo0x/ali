@@ -1,7 +1,11 @@
 package com.alinopy.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Snow on 2017/4/6.
@@ -22,21 +26,13 @@ public class InOrder {
     @Column(nullable = false)
     private Double totalFee;
 
-    @Column(nullable = false)
-    private Long supplyId;
+    @OneToMany(mappedBy = "inOrder", fetch = FetchType.EAGER)
+    private List<InOrderDetail> inOrderDetail = new ArrayList<>();
 
     @Column(nullable = false)
     private String status;
 
     public InOrder() {
-    }
-
-    public InOrder(Date createTime, String orderNo, Double totalFee, Long supplyId, String status) {
-        this.createTime = createTime;
-        this.orderNo = orderNo;
-        this.totalFee = totalFee;
-        this.supplyId = supplyId;
-        this.status = status;
     }
 
     public Long getId() {
@@ -71,12 +67,13 @@ public class InOrder {
         this.totalFee = totalFee;
     }
 
-    public Long getSupplyId() {
-        return supplyId;
+    @JsonIgnore
+    public List<InOrderDetail> getInOrderDetail() {
+        return inOrderDetail;
     }
 
-    public void setSupplyId(Long supplyId) {
-        this.supplyId = supplyId;
+    public void setInOrderDetail(List<InOrderDetail> inOrderDetail) {
+        this.inOrderDetail = inOrderDetail;
     }
 
     public String getStatus() {
