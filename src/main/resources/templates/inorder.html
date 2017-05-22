@@ -1,0 +1,158 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>供应商管理</title>
+    <meta name="description" content="这是一个 index 页面"/>
+    <meta name="keywords" content="index"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" th:href="@{/i/favicon.png}"/>
+    <link rel="apple-touch-icon-precomposed" th:href="@{/i/app-icon72x722x.png}"/>
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.page.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body data-type="index">
+<div th:replace="header :: header"></div>
+<div class="tpl-page-container tpl-page-header-fixed">
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="tpl-content-wrapper">
+        <div class="tpl-content-page-title">
+            零部件管理
+        </div>
+        <ol class="am-breadcrumb">
+            <li><a href="/index/" class="am-icon-home">首页</a></li>
+            <li class="am-active">供应商管理</li>
+        </ol>
+        <div class="tpl-content-scope">
+            <div class="note note-info">
+                <h3>供销存管理系统V1.0
+                    <small>供应商管理</small>
+                </h3>
+                <button type="button" class="am-btn am-radius my-main-btn" th:data="${suppliesCount}"
+                        onclick="supplyDetail(this)"><i class="am-icon-plus"></i> 新增供应商
+                </button>
+            </div>
+        </div>
+        <div class="am-hide" id="supplies" th:data="${supplies}"></div>
+        <div class="am-g">
+            <div th:each="supply,iterStat : ${supplies}" style="cursor: pointer"
+                 th:class="${iterStat.last}? 'am-u-end am-u-lg-3 am-u-md-6 am-u-sm-12 supply' : 'am-u-lg-3 am-u-md-6 am-u-sm-12 supply'">
+                <div th:class="${supply.status}=='活动中'? 'dashboard-stat blue': 'dashboard-stat gray'">
+                    <div class="visual">
+                        <i class="am-icon-truck"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number" th:text="${supply.id}"></div>
+                        <div class="desc" th:text="${supply.name}"></div>
+                    </div>
+                    <a class="more" href="#" onclick="supplyDetail(this)" th:data="${supply.id}"> 查看详情
+                        <i style="font-style: normal;" onclick="elementManage(this,event)"
+                           th:data="${supply.id}">商品管理</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="am-cf">
+            <div class="am-center">
+                <ul class="am-pagination am-pagination-centered">
+                    <li th:if="${isFirstPage}" class="am-disabled">
+                        <a href="javascript:void(0);">&laquo; Prev</a>
+                    </li>
+                    <li th:if="${not isFirstPage}">
+                        <a th:href="@{${'/supply'}(page=${page-1},size=${size})}">&laquo; Prev</a>
+                    </li>
+                    <li th:each="pageNo : ${#numbers.sequence(1,pageCount)}"
+                        th:class="${page eq pageNo} ? am-active:suibian">
+                        <a th:if="${page eq pageNo}" href="javascript:void(0);">
+                            <span th:text="${pageNo}"></span>
+                        </a>
+
+                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/supply'}(page=${pageNo},size=${size})}">
+                            <span th:text="${pageNo}"></span>
+                        </a>
+                    </li>
+                    <li th:if="${isLastPage}" class="am-disabled">
+                        <a href="javascript:void(0);">Next &raquo;</a>
+                    </li>
+                    <li th:if="${not isLastPage}">
+                        <a th:href="@{${'/supply'}(page=${page+1},size=${size})}">Next &raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/amazeui.min.js}"></script>
+<script th:src="@{/js/amazeui.page.js}"></script>
+<script th:src="@{/js/iscroll.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script type="text/javascript">
+    //分页处理
+    //    $("#pages").page({ pages: 10 });
+    supplyDetail = function (me) {
+        var id = $(me).attr("data");
+        window.location.href = "/supply/" + id;
+    }
+    elementManage = function (me, e) {
+        e.stopPropagation();
+        var id = $(me).attr("data");
+        console.log(id);
+        window.location.href = "/supply/elements/" + id;
+    }
+    $(function () {
+        var pageNum = $('#pageNum').attr('data');
+//        var $pages = $("#pages").page({
+//            pages: pages, //页数
+//            curr: 1, //当前页
+//            type: 'default', //主题
+//            groups: 5, //连续显示分页数
+//            prev: 'prev', //若不显示，设置false即可
+//            next: 'next', //若不显示，设置false即可
+//            first: "首页",
+//            last: "尾页", //false则不显示
+//            before: function(context, next) { //加载前触发，如果没有执行next()则中断加载
+//                console.log('开始加载...');
+//                context.time = (new Date()).getTime(); //只是演示，并没有什么卵用，可以保存一些数据到上下文中
+//                next();
+//            },
+//            render: function(context, $el, index) { //渲染[context：对this的引用，$el：当前元素，index：当前索引]
+//                //逻辑处理
+//                if (index == 'last') { //虽然上面设置了last的文字为尾页，但是经过render处理，结果变为最后一页
+//                    $el.find('a').html('最后一页');
+//                    return $el; //如果有返回值则使用返回值渲染
+//                }
+//                return false; //没有返回值则按默认处理
+//            },
+//            after: function(context, next) { //加载完成后触发
+//                var time = (new Date()).getTime(); //没有什么卵用的演示
+//                console.log('分页组件加载完毕，耗时：' + (time - context.time) + 'ms');
+//                next();
+//            },
+//            /*
+//             * 触发分页后的回调，如果首次加载时后端已处理好分页数据则需要在after中判断终止或在jump中判断first是否为假
+//             */
+//            jump: function(context, first) {
+//                console.log('当前第：' + context.option.curr + "页");
+//                //$("#content").html(thisDate(context.option.curr));
+//            }
+//        });
+        var $supplies = $("#supplies").attr("data");
+        console.log($supplies);
+        var $info = $("#info");
+        var $supplyInfo = $("#info-supply");
+        $info.click();
+        $info.addClass("active");
+        $supplyInfo.addClass("active");
+    })
+</script>
+</body>
+
+</html>
