@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>首页</title>
+    <title>创建采购清单</title>
     <meta name="description" content="这是一个 index 页面"/>
     <meta name="keywords" content="index"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -22,28 +22,135 @@
     <div th:replace="sidebar :: sidebar"></div>
     <div class="tpl-content-wrapper">
         <div class="tpl-content-page-title">
-            零部件管理
+            创建采购清单
         </div>
         <ol class="am-breadcrumb">
-            <li><a href="#" class="am-icon-home">首页</a></li>
-            <li class="am-active">内容</li>
+            <li><a href="/index/" class="am-icon-home">首页</a></li>
+            <li><a href="#">购销管理</a></li>
+            <li class="am-active">采购清单</li>
         </ol>
         <div class="tpl-content-scope">
             <div class="note note-info">
-                <h3>供销存管理系统V1.0</h3>
+                <form class="am-form-inline" role="form">
+                    <div class="am-form-group">
+                        <select name="supply" onchange="supplyChoose(this.options[this.options.selectedIndex].value)" id="supplySelect"
+                                data-am-selected="{maxHeight: 200,searchBox: 1}" required="required">选择供应商
+                            <option value="0">选择供应商</option>
+                            <option th:each="supply,iterStat : ${supplies}" th:value="${supply.id}"
+                                    th:text="${supply.name}"></option>
+                        </select>
+                    </div>
+                    <div class="am-form-group">
+                        <select name="element" data-am-selected="{maxHeight: 200,searchBox: 1}" id="elementSelect" required="required">选择零配件
+                            <option value="all">选择零配件</option>
+                        </select>
+                    </div>
+                    &nbsp;
+                    <div class="am-form-group" style="font-size: 1.6rem;">
+                        数量：
+                        <input type="number" class="am-form-field" id="count"/>件
+                    </div>
+                    &nbsp;
+                    <div class="am-form-group" style="font-size: 1.6rem;">
+                        折扣：
+                        <input type="text" class="am-form-field" id="discount"/>折
+                    </div>
+                    &nbsp;
+                    <div class="am-form-group">
+                        <button class="am-btn-warning am-btn" type="button" onclick="addElement()"><i class="am-icon-cart-plus"></i> 添 加
+                        </button>
+                    </div>
+                    &nbsp;
+                    <div class="am-form-group">
+                        <button class="am-btn-success am-btn" type="button"><i class="am-icon-cloud-upload"></i> 提 交
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
+        <div class="am-g" id="container">
         </div>
     </div>
 </div>
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/amazeui.min.js}"></script>
 <script th:src="@{/js/iscroll.js}"></script>
+<script th:src="@{/js/jquery.tmpl.min.js}"></script>
 <script th:src="@{/js/app.js}"></script>
+<script id="option" type="text/x-jquery-tmpl">
+    {{if disabled==false }}
+    <option value="${id}" data="${inPrice}">${name}</option>
+    {{/if}}
+</script>
+<script id="orderDetail" type="text/x-jquery-tmpl">
+    <div class="am-u-sm-6 am-u-end">
+                <div class="am-panel am-panel-secondary">
+                    <div class="am-panel-hd">供应商：${supplyName}</div>
+                    <div class="am-panel-bd">
+                        <p>商品：${elementName}</p>
+                        <p>价格：${showPrice}</p>
+                        <p style="text-align: center;">
+                            <button class="am-btn am-btn-danger am-btn-sm" type="button"> 删 除 </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+</script>
 <script type="text/javascript">
+    var orderDetails = Array();
+    supplyChoose = function (e) {
+        //采用ajax方式从后台取得数据
+        $.ajax({
+            url: "/inorder/add/getElements",
+            type: "POST",
+            data: {
+                supplyId: e
+            },
+            dataType: 'json',
+            success: function (data) {
+                $("#elementSelect").empty();
+                $("#option").tmpl(data.elements).appendTo('#elementSelect');
+            }
+        })
+    }
+
+    addElement = function () {
+        var supplyId = $('#supplySelect option:selected').val();
+        var supplyName = $('#supplySelect option:selected').text();
+        var elementId = $('#elementSelect option:selected').val();
+        var elementName = $('#elementSelect option:selected').text();
+        var discount = $("#discount").val();
+        var count = $("#count").val();
+        var inPrice = $("#elementSelect option:selected").attr("data");
+        var totalPrice = parseFloat(discount)*parseFloat(inPrice)*parseInt(count);
+        var showPrice = inPrice+" X "+count+" X "+discount+" = "+totalPrice;
+        if(supplyId==0||elementId==null||elementId==''||discount==null||discount==''||count==null||count==''){
+            alert("未正确填写采购单");
+            return;
+        }
+        var orderDetail = {
+            supplyId: supplyId,
+            supplyName: supplyName,
+            elementId: elementId,
+            elementName: elementName,
+            discount: discount,
+            count: count,
+            inPrice: inPrice,
+            totalPrice: totalPrice,
+            showPrice: showPrice
+        }
+        orderDetails.push(orderDetail);
+        $("#container").empty();
+        $("#orderDetail").tmpl(orderDetails).appendTo('#container');
+    }
+
     $(function () {
-        var $index = $("#index");
-        $index.click();
-        $index.addClass("active");
+        supplyChoose(0);
+        var $inout = $("#inout");
+        var $inoutIn = $("#inout-in");
+        $inout.click();
+        $inout.addClass("active");
+        $inoutIn.addClass("active");
     })
 </script>
 </body>
