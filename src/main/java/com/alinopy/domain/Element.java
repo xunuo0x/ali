@@ -48,6 +48,9 @@ public class Element {
     @OneToMany(mappedBy = "element", fetch = FetchType.EAGER)
     private List<InOrderDetail> inOrderDetail = new ArrayList<>();
 
+    @Column(columnDefinition="int default 0")
+    private Integer amount = 0;
+
     public Element() {
     }
 
@@ -151,6 +154,14 @@ public class Element {
     @JsonIgnore
     public void setSupplies(List<Supply> supplies) {
         this.supplies = supplies;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     @Override

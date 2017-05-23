@@ -112,34 +112,6 @@
                             </tr>
                             </tbody>
                         </table>
-                        <!--<div class="am-cf">-->
-                            <!--<div class="am-center">-->
-                                <!--<ul class="am-pagination am-pagination-centered">-->
-                                    <!--<li th:if="${isFirstPage}" class="am-disabled">-->
-                                        <!--<a href="javascript:void(0);">&laquo; Prev</a>-->
-                                    <!--</li>-->
-                                    <!--<li th:if="${not isFirstPage}">-->
-                                        <!--<a th:href="@{${'/supply/elements/'+supply.id}(page=${page-1},size=${size})}">&laquo; Prev</a>-->
-                                    <!--</li>-->
-                                    <!--<li th:each="pageNo : ${#numbers.sequence(1,pageCount)}"-->
-                                        <!--th:class="${page eq pageNo} ? am-active:suibian">-->
-                                        <!--<a th:if="${page eq pageNo}" href="javascript:void(0);">-->
-                                            <!--<span th:text="${pageNo}"></span>-->
-                                        <!--</a>-->
-
-                                        <!--<a th:if="${not (page eq pageNo)}" th:href="@{${'/supply/elements/'+supply.id}(page=${pageNo},size=${size})}">-->
-                                            <!--<span th:text="${pageNo}"></span>-->
-                                        <!--</a>-->
-                                    <!--</li>-->
-                                    <!--<li th:if="${isLastPage}" class="am-disabled">-->
-                                        <!--<a href="javascript:void(0);">Next &raquo;</a>-->
-                                    <!--</li>-->
-                                    <!--<li th:if="${not isLastPage}">-->
-                                        <!--<a th:href="@{${'/supply/elements/'+supply.id}(page=${page+1},size=${size})}">Next &raquo;</a>-->
-                                    <!--</li>-->
-                                <!--</ul>-->
-                            <!--</div>-->
-                        <!--</div>-->
                         <hr/>
                     </div>
                 </div>

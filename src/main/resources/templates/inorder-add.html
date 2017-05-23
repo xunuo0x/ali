@@ -33,7 +33,8 @@
             <div class="note note-info">
                 <form class="am-form-inline" role="form">
                     <div class="am-form-group">
-                        <select name="supply" onchange="supplyChoose(this.options[this.options.selectedIndex].value)" id="supplySelect"
+                        <select name="supply" onchange="supplyChoose(this.options[this.options.selectedIndex].value)"
+                                id="supplySelect"
                                 data-am-selected="{maxHeight: 200,searchBox: 1}" required="required">选择供应商
                             <option value="0">选择供应商</option>
                             <option th:each="supply,iterStat : ${supplies}" th:value="${supply.id}"
@@ -41,7 +42,8 @@
                         </select>
                     </div>
                     <div class="am-form-group">
-                        <select name="element" data-am-selected="{maxHeight: 200,searchBox: 1}" id="elementSelect" required="required">选择零配件
+                        <select name="element" data-am-selected="{maxHeight: 200,searchBox: 1}" id="elementSelect"
+                                required="required">选择零配件
                             <option value="all">选择零配件</option>
                         </select>
                     </div>
@@ -57,18 +59,36 @@
                     </div>
                     &nbsp;
                     <div class="am-form-group">
-                        <button class="am-btn-warning am-btn" type="button" onclick="addElement()"><i class="am-icon-cart-plus"></i> 添 加
+                        <button class="am-btn-warning am-btn" type="button" onclick="addElement()"><i
+                                class="am-icon-cart-plus"></i> 添 加
                         </button>
                     </div>
                     &nbsp;
                     <div class="am-form-group">
-                        <button class="am-btn-success am-btn" type="button"><i class="am-icon-cloud-upload"></i> 提 交
+                        <button class="am-btn-success am-btn" type="button" onclick="uploadOrder()"><i
+                                class="am-icon-cloud-upload"></i> 提 交
                         </button>
                     </div>
                 </form>
             </div>
         </div>
         <div class="am-g" id="container">
+        </div>
+    </div>
+    <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">系统提示</div>
+            <div class="am-modal-bd">
+                <p>对不起，操作失败！</p><span class="am-icon-btn am-warning am-icon-warning"></span>
+            </div>
+        </div>
+    </div>
+    <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">操作成功</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -81,23 +101,31 @@
     {{if disabled==false }}
     <option value="${id}" data="${inPrice}">${name}</option>
     {{/if}}
+
 </script>
 <script id="orderDetail" type="text/x-jquery-tmpl">
     <div class="am-u-sm-6 am-u-end">
                 <div class="am-panel am-panel-secondary">
                     <div class="am-panel-hd">供应商：${supplyName}</div>
                     <div class="am-panel-bd">
-                        <p>商品：${elementName}</p>
+                        <p class="am-text-truncate">商品：${elementName}</p>
                         <p>价格：${showPrice}</p>
                         <p style="text-align: center;">
-                            <button class="am-btn am-btn-danger am-btn-sm" type="button"> 删 除 </button>
+                            <button class="am-btn am-btn-danger am-btn-sm" type="button" onclick="deleteOne(this)"> 删 除 </button>
                         </p>
                     </div>
                 </div>
             </div>
+
 </script>
 <script type="text/javascript">
     var orderDetails = Array();
+    var supplies = Array();
+    var elements = Array();
+    var counts = Array();
+    var discounts = Array();
+    var $modalError = $('#my-alert');
+    var $modalSuccess = $('#my-modal-loading');
     supplyChoose = function (e) {
         //采用ajax方式从后台取得数据
         $.ajax({
@@ -122,9 +150,9 @@
         var discount = $("#discount").val();
         var count = $("#count").val();
         var inPrice = $("#elementSelect option:selected").attr("data");
-        var totalPrice = parseFloat(discount)*parseFloat(inPrice)*parseInt(count);
-        var showPrice = inPrice+" X "+count+" X "+discount+" = "+totalPrice;
-        if(supplyId==0||elementId==null||elementId==''||discount==null||discount==''||count==null||count==''){
+        var totalPrice = parseFloat(discount) * parseFloat(inPrice) * parseInt(count);
+        var showPrice = inPrice + " X " + count + " X " + discount + " = " + totalPrice;
+        if (supplyId == 0 || elementId == null || elementId == '' || discount == null || discount == '' || count == null || count == '') {
             alert("未正确填写采购单");
             return;
         }
@@ -142,6 +170,54 @@
         orderDetails.push(orderDetail);
         $("#container").empty();
         $("#orderDetail").tmpl(orderDetails).appendTo('#container');
+    }
+
+    deleteOne = function (me) {
+        var $index = $(me).parents(".am-u-end").index();
+        orderDetails.splice($index, 1);
+        $("#container").empty();
+        $("#orderDetail").tmpl(orderDetails).appendTo('#container');
+    }
+
+    uploadOrder = function () {
+        console.log(orderDetails);
+        //预处理
+        var totalFee = 0.0;
+        orderDetails.forEach(function (val) {
+            supplies.push(val.supplyId);
+            elements.push(val.elementId);
+            counts.push(val.count);
+            discounts.push(val.discount);
+            totalFee += val.totalPrice;
+        })
+        $.ajax({
+            url: "/inorder/add/addElements",
+            type: "POST",
+            data: {
+                supplies: supplies,
+                elements: elements,
+                counts: counts,
+                discounts: discounts,
+                totalFee: totalFee
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.result == 'success') {
+                    $modalSuccess.modal();
+                    setTimeout(function () {
+                        $modalSuccess.modal('close');
+                        window.location.href = "/inorder/"
+                    }, 1000);
+                } else if (data.result == "error" || data.result == "exception") {
+                    $modalError.modal();
+                    setTimeout(function () {
+                        $modalError.modal('close');
+                        window.history.back();
+                    }, 1000);
+                }
+            }
+        })
     }
 
     $(function () {

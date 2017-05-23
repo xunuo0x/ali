@@ -35,6 +35,14 @@ public class InOrder {
     public InOrder() {
     }
 
+    public InOrder(Date createTime, String orderNo, Double totalFee, List<InOrderDetail> inOrderDetail, String status) {
+        this.createTime = createTime;
+        this.orderNo = orderNo;
+        this.totalFee = totalFee;
+        this.inOrderDetail = inOrderDetail;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

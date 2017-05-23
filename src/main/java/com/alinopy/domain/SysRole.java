@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * Created by Snow on 2017/5/22.
+ * Created by Snow on 2017/5/23.
  */
 @Entity
 public class SysRole {
@@ -13,6 +13,7 @@ public class SysRole {
     @GeneratedValue
     private Long id;
     private String name;
+
 
     public Long getId() {
         return id;
