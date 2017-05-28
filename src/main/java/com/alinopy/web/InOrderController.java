@@ -87,15 +87,15 @@ public class InOrderController {
 
     @RequestMapping(value="/updateStatus",method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap updateStatus(@RequestParam(name = "id") Long id,@RequestParam(name = "status") String status){
+    public ModelMap updateStatus(@RequestParam(name = "id") Long id,@RequestParam(name = "status") Integer status){
         ModelMap modelMap = new ModelMap();
-        InOrder inOrder = inOrderRepository.findOne(id);
         System.out.println(id);
-        if(status.equals("1")){
+        InOrder inOrder = inOrderRepository.findOne(id);
+        if(status==1){
             inOrder.setStatus("已通过审核");
-        }else if (status.equals("0")){
+        }else if (status==0){
             inOrder.setStatus("未通过审核");
-        }else if(status.equals("2")){
+        }else if(status==2){
             inOrder.setStatus("已入库");
             List<InOrderDetail> inOrderDetails = inOrder.getInOrderDetail();
             for (InOrderDetail inOrderDetail: inOrderDetails){

@@ -1,9 +1,6 @@
 package com.alinopy.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Snow on 2017/4/6.
@@ -14,11 +11,13 @@ public class OutOrderDetail {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private Long elementId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "element_id")
+    private Element element;
 
-    @Column(nullable = false)
-    private Long orderId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "outorder_id")
+    private OutOrder outOrder;
 
     @Column(nullable = false)
     private Integer amount;
@@ -29,9 +28,9 @@ public class OutOrderDetail {
     public OutOrderDetail() {
     }
 
-    public OutOrderDetail(Long elementId, Long orderId, Integer amount, Double discount) {
-        this.elementId = elementId;
-        this.orderId = orderId;
+    public OutOrderDetail(Element element, OutOrder outOrder, Integer amount, Double discount) {
+        this.element = element;
+        this.outOrder = outOrder;
         this.amount = amount;
         this.discount = discount;
     }
@@ -44,20 +43,20 @@ public class OutOrderDetail {
         this.id = id;
     }
 
-    public Long getElementId() {
-        return elementId;
+    public Element getElement() {
+        return element;
     }
 
-    public void setElementId(Long elementId) {
-        this.elementId = elementId;
+    public void setElement(Element element) {
+        this.element = element;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public OutOrder getOutOrder() {
+        return outOrder;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOutOrder(OutOrder outOrder) {
+        this.outOrder = outOrder;
     }
 
     public Integer getAmount() {

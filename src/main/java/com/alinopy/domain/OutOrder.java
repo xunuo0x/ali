@@ -1,7 +1,11 @@
 package com.alinopy.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Snow on 2017/4/6.
@@ -28,17 +32,25 @@ public class OutOrder {
     @Column(nullable = false)
     private String contact;
 
+    @Column(nullable = false)
+    private String status;
+
+    @OneToMany(mappedBy = "outOrder", fetch = FetchType.EAGER)
+    private List<OutOrderDetail> orderDetailList = new ArrayList<>();
+
     private String remark;
 
     public OutOrder() {
     }
 
-    public OutOrder(Date createTime, String orderNo, Double totalFee, String costumer, String contact, String remark) {
+    public OutOrder(Date createTime, String orderNo, Double totalFee, String costumer, String contact, String status, List<OutOrderDetail> orderDetailList, String remark) {
         this.createTime = createTime;
         this.orderNo = orderNo;
         this.totalFee = totalFee;
         this.costumer = costumer;
         this.contact = contact;
+        this.status = status;
+        this.orderDetailList = orderDetailList;
         this.remark = remark;
     }
 
@@ -90,11 +102,28 @@ public class OutOrder {
         this.contact = contact;
     }
 
+    @JsonIgnore
+    public List<OutOrderDetail> getOrderDetailList() {
+        return orderDetailList;
+    }
+
+    public void setOrderDetailList(List<OutOrderDetail> orderDetailList) {
+        this.orderDetailList = orderDetailList;
+    }
+
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
