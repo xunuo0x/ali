@@ -8,6 +8,8 @@
     <meta name="keywords" content="index"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="renderer" content="webkit"/>
+    <meta name="_csrf" th:content="${_csrf.token}" content=""/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" content=""/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="icon" type="image/png" th:href="@{/i/favicon.png}"/>
     <link rel="apple-touch-icon-precomposed" th:href="@{/i/app-icon72x722x.png}"/>
@@ -119,6 +121,11 @@
 
 </script>
 <script type="text/javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
     var orderDetails = Array();
     var supplies = Array();
     var elements = Array();

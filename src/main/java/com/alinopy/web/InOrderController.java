@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,8 @@ public class InOrderController {
     protected SupplyRepository supplyRepository;
     @Autowired
     protected InOrderDetailRepository inOrderDetailRepository;
+    @Autowired
+    protected ReportRepository reportRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap modelMap, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "9") Integer size){
@@ -93,10 +97,13 @@ public class InOrderController {
         InOrder inOrder = inOrderRepository.findOne(id);
         if(status==1){
             inOrder.setStatus("已通过审核");
+            addReport(inOrder,"通过审核");
         }else if (status==0){
             inOrder.setStatus("未通过审核");
+            addReport(inOrder,"未通过审核");
         }else if(status==2){
             inOrder.setStatus("已入库");
+            addReport(inOrder,"已入库");
             List<InOrderDetail> inOrderDetails = inOrder.getInOrderDetail();
             for (InOrderDetail inOrderDetail: inOrderDetails){
                 Element element = inOrderDetail.getElement();
@@ -116,6 +123,16 @@ public class InOrderController {
             modelMap.addAttribute("result","exception");
         }
         return modelMap;
+    }
+    private Boolean addReport(InOrder inOrder,String action){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Report report = new Report(new Date(),inOrder.getOrderNo(),userDetails.getUsername(),action,inOrder.getTotalFee());
+        if(reportRepository.save(report)!=null){
+            return true;
+        }
+        return false;
     }
 
 
@@ -167,8 +184,14 @@ public class InOrderController {
             inOrderDetailRepository.save(inOrderDetails);
             inOrder.setTotalFee(totalFee);
             inOrder.setInOrderDetail(inOrderDetails);
+
             if(inOrderRepository.save(inOrder)!=null){
                 modelMap.addAttribute("result","success");
+                UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+                Report report = new Report(new Date(),inOrder.getOrderNo(),userDetails.getUsername(),"加入采购清单",inOrder.getTotalFee());
+                reportRepository.save(report);
             }else {
                 modelMap.addAttribute("result","error");
             }

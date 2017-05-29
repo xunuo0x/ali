@@ -1,0 +1,87 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>库存流水</title>
+    <meta name="description" content="这是一个 index 页面"/>
+    <meta name="keywords" content="index"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" th:href="@{/i/favicon.png}"/>
+    <link rel="apple-touch-icon-precomposed" th:href="@{/i/app-icon72x722x.png}"/>
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body data-type="index">
+<div th:replace="header :: header"></div>
+<div class="tpl-page-container tpl-page-header-fixed">
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="tpl-content-wrapper">
+        <div class="tpl-content-page-title">
+            零部件管理
+        </div>
+        <ol class="am-breadcrumb">
+            <li><a href="#" class="am-icon-home">首页</a></li>
+            <li class="am-active">内容</li>
+        </ol>
+        <div class="tpl-content-scope">
+            <div class="note note-info">
+                <h3>供销存管理系统V1.0</h3>
+            </div>
+        </div>
+        <div class="am-g">
+            <ul class="am-list am-list-static am-list-border am-list-striped">
+                <li th:each="report,iterStat : ${reports}" th:text="'['+${report.createTime}+']：订单'+${report.orderNo}+';操作：'+${report.action}"></li>
+
+            </ul>
+        </div>
+        <div class="am-cf">
+            <div class="am-center">
+                <ul class="am-pagination am-pagination-centered">
+                    <li th:if="${isFirstPage}" class="am-disabled">
+                        <a href="javascript:void(0);">&laquo; Prev</a>
+                    </li>
+                    <li th:if="${not isFirstPage}">
+                        <a th:href="@{${'/supply'}(page=${page-1},size=${size})}">&laquo; Prev</a>
+                    </li>
+                    <li th:each="pageNo : ${#numbers.sequence(1,pageCount)}"
+                        th:class="${page eq pageNo} ? am-active:suibian">
+                        <a th:if="${page eq pageNo}" href="javascript:void(0);">
+                            <span th:text="${pageNo}"></span>
+                        </a>
+
+                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/supply'}(page=${pageNo},size=${size})}">
+                            <span th:text="${pageNo}"></span>
+                        </a>
+                    </li>
+                    <li th:if="${isLastPage}" class="am-disabled">
+                        <a href="javascript:void(0);">Next &raquo;</a>
+                    </li>
+                    <li th:if="${not isLastPage}">
+                        <a th:href="@{${'/supply'}(page=${page+1},size=${size})}">Next &raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/amazeui.min.js}"></script>
+<script th:src="@{/js/iscroll.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        var $storage = $("#storage");
+        var $storageReport = $("#storage-report");
+        $storage.click();
+        $storage.addClass("active");
+        $storageReport.addClass("active");
+    })
+</script>
+</body>
+
+</html>

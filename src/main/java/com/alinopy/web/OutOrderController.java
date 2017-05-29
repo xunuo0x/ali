@@ -58,65 +58,65 @@ public class OutOrderController {
         return "outorder";
     }
 
-//    @RequestMapping(value = "/check", method = RequestMethod.GET)
-//    public String inorderCheck(ModelMap modelMap, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "9") Integer size){
-//        //分页查询
-//        Sort sort = new Sort(Sort.Direction.DESC, "id");
-//        Pageable pageable = new PageRequest(page-1, size, sort);
-//        Long count = inOrderRepository.count();
-//        int pageCount =  1;
-//        boolean isFirstPage =false;
-//        boolean isLastPage =false;
-//        if(page==1){
-//            isFirstPage = true;
-//        }
-//        if(page==pageCount){
-//            isLastPage =true;
-//        }
-//        Page<InOrder> inOrders = inOrderRepository.findAll(pageable);
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    public String inorderCheck(ModelMap modelMap, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "9") Integer size){
+        //分页查询
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(page-1, size, sort);
+        Long count = outOrderRepository.count();
+        int pageCount =  1;
+        boolean isFirstPage =false;
+        boolean isLastPage =false;
+        if(page==1){
+            isFirstPage = true;
+        }
+        if(page==pageCount){
+            isLastPage =true;
+        }
+        Page<OutOrder> outOrders = outOrderRepository.findAll(pageable);
+
+        modelMap.addAttribute("page",page);
+        modelMap.addAttribute("size",size);
+        modelMap.addAttribute("isFirstPage",isFirstPage);
+        modelMap.addAttribute("isLastPage",isLastPage);
+        modelMap.addAttribute("pageCount",pageCount);
+        modelMap.addAttribute("count",count+1);
+        modelMap.addAttribute("outOrders",outOrders);
+        return "outorder-check";
+    }
 //
-//        modelMap.addAttribute("page",page);
-//        modelMap.addAttribute("size",size);
-//        modelMap.addAttribute("isFirstPage",isFirstPage);
-//        modelMap.addAttribute("isLastPage",isLastPage);
-//        modelMap.addAttribute("pageCount",pageCount);
-//        modelMap.addAttribute("count",count+1);
-//        modelMap.addAttribute("inOrders",inOrders);
-//        return "inorder-check";
-//    }
-//
-//    @RequestMapping(value="/updateStatus",method = RequestMethod.POST)
-//    @ResponseBody
-//    public ModelMap updateStatus(@RequestParam(name = "id") Long id,@RequestParam(name = "status") Integer status){
-//        ModelMap modelMap = new ModelMap();
-//        System.out.println(id);
-//        InOrder inOrder = inOrderRepository.findOne(id);
-//        if(status==1){
-//            inOrder.setStatus("已通过审核");
-//        }else if (status==0){
-//            inOrder.setStatus("未通过审核");
-//        }else if(status==2){
-//            inOrder.setStatus("已入库");
-//            List<InOrderDetail> inOrderDetails = inOrder.getInOrderDetail();
-//            for (InOrderDetail inOrderDetail: inOrderDetails){
-//                Element element = inOrderDetail.getElement();
-//                int amount = element.getAmount();
-//                amount+=inOrderDetail.getAmount();
-//                element.setAmount(amount);
-//                elementRepository.save(element);
-//            }
-//        }
-//        try{
-//            if(inOrderRepository.save(inOrder)!=null){
-//                modelMap.addAttribute("result","success");
-//            }else {
-//                modelMap.addAttribute("result","error");
-//            }
-//        }catch (Exception e){
-//            modelMap.addAttribute("result","exception");
-//        }
-//        return modelMap;
-//    }
+    @RequestMapping(value="/updateStatus",method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap updateStatus(@RequestParam(name = "id") Long id,@RequestParam(name = "status") Integer status){
+        ModelMap modelMap = new ModelMap();
+        System.out.println(id);
+        OutOrder outOrder = outOrderRepository.findOne(id);
+        if(status==1){
+            outOrder.setStatus("已通过审核");
+        }else if (status==0){
+            outOrder.setStatus("未通过审核");
+        }else if (status==2){
+            outOrder.setStatus("已出库");
+            List<OutOrderDetail> outOrderDetails = outOrder.getOrderDetailList();
+            for (OutOrderDetail outOrderDetail: outOrderDetails){
+                Element element = outOrderDetail.getElement();
+                int amount = element.getAmount();
+                amount-=outOrderDetail.getAmount();
+                element.setAmount(amount);
+                elementRepository.save(element);
+            }
+        }
+        try{
+            if(outOrderRepository.save(outOrder)!=null){
+                modelMap.addAttribute("result","success");
+            }else {
+                modelMap.addAttribute("result","error");
+            }
+        }catch (Exception e){
+            modelMap.addAttribute("result","exception");
+        }
+        return modelMap;
+    }
 //
 //
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
