@@ -29,7 +29,11 @@
         <div class="login-font">
             <i>4S店供销存管理系统</i>
         </div>
-        <div th:if="${param.error}" class="am-alert am-alert-danger" data-am-alert="">
+        <div th:if="${param.logout}" class="am-alert am-alert-success" data-am-alert="">
+            <button type="button" class="am-close">&times;</button>
+            <p>已注销！</p>
+        </div>
+        <div th:if="${param.error}" class="am-alert am-alert-warning" data-am-alert="">
             <button type="button" class="am-close">&times;</button>
             <p>用户名或密码错误，请重试！</p>
         </div>

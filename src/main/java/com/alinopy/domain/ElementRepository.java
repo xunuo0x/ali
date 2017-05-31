@@ -12,5 +12,7 @@ import java.util.List;
 public interface ElementRepository extends JpaRepository<Element, Long> {
     Page<Element> findAllByDisabledIsFalse(Pageable pageable);
     List<Element> findByAmountGreaterThanAndDisabledFalse(Integer amount);
+    Page<Element> findByAmountGreaterThanAndDisabledFalse(Integer amount,Pageable pageable);
     Long countByDisabledIsFalse();
+    Long countByDisabledIsFalseAndAmountGreaterThan(Integer amount);
 }

@@ -6,7 +6,7 @@
 <body>
 <div th:fragment="header">
     <header class="am-topbar am-topbar-inverse admin-header">
-        <div class="am-topbar-brand" sec:authorize="hasRole('ROLE_USER')">
+        <div class="am-topbar-brand">
             <a href="#" class="tpl-logo">
                 <img th:src="@{/img/logo.png}" alt=""/>
             </a>
@@ -32,13 +32,13 @@
                         <span class="tpl-header-list-user-nick">禁言小张</span><span class="tpl-header-list-user-ico"> <img th:src="@{/img/user01.png}"/></span>
                     </a>
                     <ul class="am-dropdown-content">
-                        <li><a href="#"><span class="am-icon-bell-o"></span> 资料</a></li>
-                        <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-                        <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+                        <!--<li><a href="#"><span class="am-icon-bell-o"></span> 资料</a></li>-->
+                        <li><a href="/user"><span class="am-icon-cog"></span> 设置</a></li>
+                        <li><a href="#" id="logout1"><span class="am-icon-power-off"></span> 退出</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" class="tpl-header-list-link">
+                    <a href="#" id="logout2" class="tpl-header-list-link">
                         <span class="am-icon-sign-out tpl-header-list-ico-out-size"></span>
                     </a>
                 </li>

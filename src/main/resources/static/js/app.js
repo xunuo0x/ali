@@ -31,3 +31,9 @@ $("#info-element #info-supply #info-element").on('click', function () {
 $("#logout").on('click', function (){
     $("#logoutForm").submit();
 })
+$("#logout1").on('click', function (){
+    $("#logoutForm").submit();
+})
+$("#logout2").on('click', function (){
+    $("#logoutForm").submit();
+})

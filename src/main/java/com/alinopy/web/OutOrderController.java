@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,8 @@ public class OutOrderController {
     protected SupplyRepository supplyRepository;
     @Autowired
     protected OutOrderDetailRepository outOrderDetailRepository;
+    @Autowired
+    protected ReportRepository reportRepository;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(ModelMap modelMap, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "9") Integer size){
@@ -64,7 +68,7 @@ public class OutOrderController {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = new PageRequest(page-1, size, sort);
         Long count = outOrderRepository.count();
-        int pageCount =  1;
+        int pageCount =  (int)Math.ceil((double)count/size);
         boolean isFirstPage =false;
         boolean isLastPage =false;
         if(page==1){
@@ -93,10 +97,13 @@ public class OutOrderController {
         OutOrder outOrder = outOrderRepository.findOne(id);
         if(status==1){
             outOrder.setStatus("已通过审核");
+            addReport(outOrder,"通过审核");
         }else if (status==0){
             outOrder.setStatus("未通过审核");
+            addReport(outOrder,"未通过审核");
         }else if (status==2){
             outOrder.setStatus("已出库");
+            addReport(outOrder,"已出库");
             List<OutOrderDetail> outOrderDetails = outOrder.getOrderDetailList();
             for (OutOrderDetail outOrderDetail: outOrderDetails){
                 Element element = outOrderDetail.getElement();
@@ -116,6 +123,16 @@ public class OutOrderController {
             modelMap.addAttribute("result","exception");
         }
         return modelMap;
+    }
+    private Boolean addReport(OutOrder outOrder,String action){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Report report = new Report(new Date(),outOrder.getOrderNo(),userDetails.getUsername(),action,outOrder.getTotalFee());
+        if(reportRepository.save(report)!=null){
+            return true;
+        }
+        return false;
     }
 //
 //
@@ -166,6 +183,11 @@ public class OutOrderController {
             outOrder.setOrderDetailList(outOrderDetails);
             if(outOrderRepository.save(outOrder)!=null){
                 modelMap.addAttribute("result","success");
+                UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+                Report report = new Report(new Date(),outOrder.getOrderNo(),userDetails.getUsername(),"加入销售清单",outOrder.getTotalFee());
+                reportRepository.save(report);
             }else {
                 modelMap.addAttribute("result","error");
             }

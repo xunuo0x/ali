@@ -21,10 +21,10 @@
                 </a>
                 <ul class="tpl-left-nav-sub-menu">
                     <li>
-                        <a href="#">
-                            <i class="am-icon-angle-right"></i>
-                            <span sec:authorize="hasRole('ROLE_ADMIN')">用户信息</span>
-                        </a>
+                        <!--<a href="#">-->
+                            <!--<i class="am-icon-angle-right"></i>-->
+                            <!--<span>用户信息</span>-->
+                        <!--</a>-->
                         <a href="/element/" id="info-element">
                             <i class="am-icon-angle-right"></i>
                             <span>零配件信息</span>
@@ -44,7 +44,7 @@
                 </a>
                 <ul class="tpl-left-nav-sub-menu">
                     <li>
-                        <a href="#">
+                        <a href="/report/list" id="storage-list">
                             <i class="am-icon-angle-right"></i>
                             <span>库存详情</span>
                         </a>
@@ -90,18 +90,18 @@
                 </a>
                 <ul class="tpl-left-nav-sub-menu">
                     <li>
-                        <a href="#">
-                            <i class="am-icon-angle-right"></i>
-                            <span>资料</span>
-                        </a>
-                        <a href="#">
+                        <!--<a href="#">-->
+                            <!--<i class="am-icon-angle-right"></i>-->
+                            <!--<span>资料</span>-->
+                        <!--</a>-->
+                        <a href="/user" id="personal-info">
                             <i class="am-icon-angle-right"></i>
                             <span>设置</span>
                         </a>
-                        <a href="#">
+                        <a href="#" id="logout" onclick="logout()">
                             <form th:action="@{/logout}" id="logoutForm" method="post">
                             <i class="am-icon-angle-right"></i>
-                                <span id="logout" onclick="logout()">退出
+                                <span>退出
                                 </span>
                             </form>
                         </a>
