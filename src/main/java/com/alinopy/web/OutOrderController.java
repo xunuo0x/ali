@@ -31,13 +31,13 @@ public class OutOrderController {
     @Autowired
     protected OutOrderDetailRepository outOrderDetailRepository;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(ModelMap modelMap, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "9") Integer size){
         //分页查询
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = new PageRequest(page-1, size, sort);
         Long count = outOrderRepository.count();
-        int pageCount =  1;
+        int pageCount =  (int)Math.ceil((double)count/size);
         boolean isFirstPage =false;
         boolean isLastPage =false;
         if(page==1){

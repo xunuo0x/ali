@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="en">
+    <link rel="stylesheet" th:href="@{/js/app.js}"/>
+</head>
 <body>
 <div th:fragment="header">
     <header class="am-topbar am-topbar-inverse admin-header">
-        <div class="am-topbar-brand">
+        <div class="am-topbar-brand" sec:authorize="hasRole('ROLE_USER')">
             <a href="#" class="tpl-logo">
                 <img th:src="@{/img/logo.png}" alt=""/>
             </a>

@@ -28,3 +28,6 @@ $(document).on($.AMUI.fullscreen.raw.fullscreenchange, function() {
 $("#info-element #info-supply #info-element").on('click', function () {
     $("#info").click();
 })
+$("#logout").on('click', function (){
+    $("#logoutForm").submit();
+})

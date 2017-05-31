@@ -52,7 +52,7 @@
                             <span th:case="'待审核'" class="am-badge am-badge-secondary">待审核</span>
                             <span th:case="'已通过审核'" class="am-badge am-badge-success">已通过审核</span>
                             <span th:case="'未通过审核'" class="am-badge am-badge-default">未通过审核</span>
-                            <span th:case="'已入库'" class="am-badge am-badge-primary">已出库</span>
+                            <span th:case="'已出库'" class="am-badge am-badge-primary">已出库</span>
                         </p>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         <a href="javascript:void(0);">&laquo; Prev</a>
                     </li>
                     <li th:if="${not isFirstPage}">
-                        <a th:href="@{${'/supply'}(page=${page-1},size=${size})}">&laquo; Prev</a>
+                        <a th:href="@{${'/outorder'}(page=${page-1},size=${size})}">&laquo; Prev</a>
                     </li>
                     <li th:each="pageNo : ${#numbers.sequence(1,pageCount)}"
                         th:class="${page eq pageNo} ? am-active:suibian">
@@ -73,7 +73,7 @@
                             <span th:text="${pageNo}"></span>
                         </a>
 
-                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/supply'}(page=${pageNo},size=${size})}">
+                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/outorder'}(page=${pageNo},size=${size})}">
                             <span th:text="${pageNo}"></span>
                         </a>
                     </li>
@@ -81,7 +81,7 @@
                         <a href="javascript:void(0);">Next &raquo;</a>
                     </li>
                     <li th:if="${not isLastPage}">
-                        <a th:href="@{${'/supply'}(page=${page+1},size=${size})}">Next &raquo;</a>
+                        <a th:href="@{${'/outorder'}(page=${page+1},size=${size})}">Next &raquo;</a>
                     </li>
                 </ul>
             </div>

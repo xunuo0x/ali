@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>销售清单</title>
+    <title>销售审核</title>
     <meta name="description" content="这是一个 index 页面"/>
     <meta name="keywords" content="index"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -25,17 +25,17 @@
     <div th:replace="sidebar :: sidebar"></div>
     <div class="tpl-content-wrapper">
         <div class="tpl-content-page-title">
-            销售清单
+            销售审核
         </div>
         <ol class="am-breadcrumb">
             <li><a href="/index/" class="am-icon-home">首页</a></li>
             <li><a href="#">购销管理</a></li>
-            <li class="am-active">销售清单</li>
+            <li class="am-active">销售审核</li>
         </ol>
         <div class="tpl-content-scope">
             <div class="note note-info">
                 <h3>供销存管理系统V1.0
-                    <small>销售清单</small>
+                    <small>销售审核</small>
                 </h3>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         <a href="javascript:void(0);">&laquo; Prev</a>
                     </li>
                     <li th:if="${not isFirstPage}">
-                        <a th:href="@{${'/supply'}(page=${page-1},size=${size})}">&laquo; Prev</a>
+                        <a th:href="@{${'/outorder/check'}(page=${page-1},size=${size})}">&laquo; Prev</a>
                     </li>
                     <li th:each="pageNo : ${#numbers.sequence(1,pageCount)}"
                         th:class="${page eq pageNo} ? am-active:suibian">
@@ -78,7 +78,7 @@
                             <span th:text="${pageNo}"></span>
                         </a>
 
-                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/supply'}(page=${pageNo},size=${size})}">
+                        <a th:if="${not (page eq pageNo)}" th:href="@{${'/outorder/check'}(page=${pageNo},size=${size})}">
                             <span th:text="${pageNo}"></span>
                         </a>
                     </li>
@@ -86,7 +86,7 @@
                         <a href="javascript:void(0);">Next &raquo;</a>
                     </li>
                     <li th:if="${not isLastPage}">
-                        <a th:href="@{${'/supply'}(page=${page+1},size=${size})}">Next &raquo;</a>
+                        <a th:href="@{${'/outorder/check'}(page=${page+1},size=${size})}">Next &raquo;</a>
                     </li>
                 </ul>
             </div>

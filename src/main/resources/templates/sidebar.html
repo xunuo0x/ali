@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <body>
 <div class="tpl-left-nav tpl-left-nav-hover" th:fragment="sidebar">
     <div class="tpl-left-nav-title">
@@ -23,7 +23,7 @@
                     <li>
                         <a href="#">
                             <i class="am-icon-angle-right"></i>
-                            <span>用户信息</span>
+                            <span sec:authorize="hasRole('ROLE_ADMIN')">用户信息</span>
                         </a>
                         <a href="/element/" id="info-element">
                             <i class="am-icon-angle-right"></i>
@@ -99,8 +99,11 @@
                             <span>设置</span>
                         </a>
                         <a href="#">
+                            <form th:action="@{/logout}" id="logoutForm" method="post">
                             <i class="am-icon-angle-right"></i>
-                            <span>退出</span>
+                                <span id="logout" onclick="logout()">退出
+                                </span>
+                            </form>
                         </a>
                     </li>
                 </ul>
